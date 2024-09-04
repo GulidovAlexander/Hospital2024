@@ -1,0 +1,24 @@
+﻿@page "/login"
+
+<div class="container-login">
+    <p>Авторизация</p>
+    <div>
+        <p>Login</p>
+        <InputText @bind-Value="@(Login)" />
+        <p>Password</p>
+        <InputText @bind-Value="@(Password)" />
+        <button @onclick=OnClick >Войти</button>
+    </div>
+</div>
+
+@code {
+    private string Login { get; set; }
+    private string Password { get; set; }
+
+
+    private void OnClick()
+    {
+        Console.WriteLine("Login: " + Login);
+        Console.WriteLine("Password: " + Password);
+    }
+}
