@@ -1,4 +1,5 @@
 ﻿@page "/login"
+@using BlazorClient.Models.Entity
 
 <div class="container-login">
     <p>Авторизация</p>
@@ -25,6 +26,8 @@
 </div>
 
 @code {
+    private ApplicationDBContext _context { get; set; }
+
     private string LoginUsername { get; set; }
     private string LoginPassword { get; set; }
 
@@ -32,17 +35,24 @@
     private string RegistrationPassword { get; set; }
     private string RegistrationPasswordRepeat { get; set; }
 
-
     private void LoginOnClick()
     {
         Console.WriteLine("Login: " + LoginUsername);
         Console.WriteLine("Password: " + LoginPassword);
     }
 
-    private void RegistrationOnClick()
+    private async void RegistrationOnClick()
     {
         Console.WriteLine("Login: " + RegistrationUsername);
         Console.WriteLine("Password: " + RegistrationPassword);
         Console.WriteLine("Password: " + RegistrationPasswordRepeat);
+
+        var user = new User
+            {
+                Login = RegistrationUsername,
+                Password = RegistrationPassword
+            };
+        Program.DBContext.Users.Add(user);
+        await Program.DBContext.SaveChangesAsync();
     }
 }
