@@ -4,21 +4,45 @@
     <p>Авторизация</p>
     <div>
         <p>Login</p>
-        <InputText @bind-Value="@(Login)" />
+        <input @bind="@(LoginUsername)" />
         <p>Password</p>
-        <InputText @bind-Value="@(Password)" />
-        <button @onclick=OnClick >Войти</button>
+        <input type="password" @bind="@(LoginPassword)" />
+        <button @onclick=LoginOnClick >Войти</button>
+    </div>
+</div>
+
+<div class="container-login">
+    <p>Регистрация</p>
+    <div>
+        <p>Login</p>
+        <input @bind="@(RegistrationUsername)" />
+        <p>Password</p>
+        <input type="password" @bind="@(RegistrationPassword)" />
+        <p>Password (repeat)</p>
+        <input type="password" @bind="@(RegistrationPasswordRepeat)" />
+        <button @onclick=RegistrationOnClick>Регистрация</button>
     </div>
 </div>
 
 @code {
-    private string Login { get; set; }
-    private string Password { get; set; }
+    private string LoginUsername { get; set; }
+    private string LoginPassword { get; set; }
+
+    private string RegistrationUsername { get; set; }
+    private string RegistrationPassword { get; set; }
+    private string RegistrationPasswordRepeat { get; set; }
 
 
-    private void OnClick()
+    private void LoginOnClick()
     {
-        Console.WriteLine("Login: " + Login);
-        Console.WriteLine("Password: " + Password);
+        Console.WriteLine("Login: " + LoginUsername);
+        Console.WriteLine("Password: " + LoginPassword);
+    }
+
+    private void RegistrationOnClick()
+    {
+        Console.WriteLine("Login: " + RegistrationUsername);
+        Console.WriteLine("Password: " + RegistrationPassword);
+        Console.WriteLine("Password: " + RegistrationPasswordRepeat);
     }
 }
