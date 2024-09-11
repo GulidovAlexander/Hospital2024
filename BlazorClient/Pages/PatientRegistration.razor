@@ -55,11 +55,18 @@
             await Program.DBContext.SaveChangesAsync();
             _message = "Good!";
 
+
+            GenerationDocument();
+
+
             _patient = new Patient()
                 {
                     InsurencePolicyPeriod = DateTime.Now
                 };
             _inputFilePhoto = Guid.NewGuid();
+
+
+
         }
         catch (Exception ex)
         {
@@ -78,5 +85,10 @@
             .OpenReadStream(maxAllowedSize: 100000000)
             .CopyToAsync(memoryStream);
         _patient.Photo = memoryStream.ToArray();
+    }
+
+    private void GenerationDocument()
+    {
+        
     }
 }
