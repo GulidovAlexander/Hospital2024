@@ -10,5 +10,6 @@
         public long InsurencePolicyNumber { get; set; }
         public DateTime InsurencePolicyPeriod { get; set; }
         public string InsurencyCompany { get; set; }
+        public byte[] Photo { get; set; }
     }
 }

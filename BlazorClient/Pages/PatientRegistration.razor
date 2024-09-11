@@ -6,18 +6,77 @@
     <div>
         <p>FIO</p>
         <input @bind="@(_patient.FIO)" />
-        
+
+        <p>PassportNumber</p>
+        <input type="number" @bind="@(_patient.PassportNumber)" />
+
+        <p>PassportSerial</p>
+        <input type="number" @bind="@(_patient.PassportSerial)" />
+
+        <p>InsurencyCompany</p>
+        <input @bind="@(_patient.InsurencyCompany)" />
+
+        <p>InsurencePolicyNumber</p>
+        <input type="number" @bind="@(_patient.InsurencePolicyNumber)" />
+
+        <p>InsurencePolicyPeriod</p>
+        <input type="date" @bind="@(_patient.InsurencePolicyPeriod)" />
+
+        <p>PlaceOfWork</p>
+        <input @bind="@(_patient.PlaceOfWork)" />
+
+        <p>Фото</p>
+        <InputFile @key="@(_inputFilePhoto)" OnChange="LoadPhotoPatient" />
+
         <button @onclick=RegistrationOnClick>Регистрация</button>
+
+        @if(_message.Length > 0)
+        {
+            <p>@(_message)</p>
+        }
     </div>
 </div>
 
 @code {
-    private Patient _patient = new Patient();
+    private Patient _patient = new Patient()
+    {
+        InsurencePolicyPeriod = DateTime.Now   
+    };
+
+    private string _message = "";
+    private Guid _inputFilePhoto = Guid.NewGuid();
+
 
     private async void RegistrationOnClick()
     {
-        
-        Program.DBContext.Patients.Add(_patient);
-        await Program.DBContext.SaveChangesAsync();
+        try
+        {
+            Program.DBContext.Patients.Add(_patient);
+            await Program.DBContext.SaveChangesAsync();
+            _message = "Good!";
+
+            _patient = new Patient()
+                {
+                    InsurencePolicyPeriod = DateTime.Now
+                };
+            _inputFilePhoto = Guid.NewGuid();
+        }
+        catch (Exception ex)
+        {
+            _message = ex.Message;
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+    private async void LoadPhotoPatient(InputFileChangeEventArgs e)
+    {
+        var memoryStream = new MemoryStream();
+        await e.File
+            .OpenReadStream(maxAllowedSize: 100000000)
+            .CopyToAsync(memoryStream);
+        _patient.Photo = memoryStream.ToArray();
     }
 }
