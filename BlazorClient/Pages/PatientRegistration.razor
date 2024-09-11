@@ -1,5 +1,6 @@
 ﻿@page "/PatientRegistration"
 @using BlazorClient.Models.Entity
+@using BlazorClient.Services
 
 <div class="container-login">
     <p>Регистрация</p>
@@ -55,9 +56,7 @@
             await Program.DBContext.SaveChangesAsync();
             _message = "Good!";
 
-
-            GenerationDocument();
-
+            await DocxService.WritePatientDocumentPD(_patient);
 
             _patient = new Patient()
                 {
@@ -87,8 +86,4 @@
         _patient.Photo = memoryStream.ToArray();
     }
 
-    private void GenerationDocument()
-    {
-        
-    }
 }

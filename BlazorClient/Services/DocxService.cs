@@ -7,12 +7,14 @@ namespace BlazorClient.Services
 {
     public class DocxService
     {
-        public async Task WritePatientDocumentOne(Patient patient)
+        public static async Task WritePatientDocumentPD(Patient patient)
         {
             var pathDocuments = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Documents");
             var pathOriginalDocumentPD = Path.Combine(pathDocuments, "Согласие на обработку ПД.docx");
-            var memoryDocumentPD = new MemoryStream(File.ReadAllBytes(pathOriginalDocumentPD));
+            var memoryDocumentPD = new MemoryStream(await File.ReadAllBytesAsync(pathOriginalDocumentPD));
             var documentPD = WordprocessingDocument.Open(memoryDocumentPD, true);
+
+            Directory.CreateDirectory(pathDocuments);
 
             var dataKeysPatient = new Dictionary<string, string>()
             {
@@ -44,7 +46,7 @@ namespace BlazorClient.Services
                 documentPD.Save();
 
                 var pathSave = Path.Combine(pathDocuments, patient.PatientId + "_PD.docx");
-                File.WriteAllBytes(pathSave, memoryDocumentPD.ToArray());
+                await File.WriteAllBytesAsync(pathSave, memoryDocumentPD.ToArray());
             }
             catch (Exception ex)
             {
