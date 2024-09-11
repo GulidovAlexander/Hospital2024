@@ -1,0 +1,23 @@
+﻿@page "/PatientRegistration"
+@using BlazorClient.Models.Entity
+
+<div class="container-login">
+    <p>Регистрация</p>
+    <div>
+        <p>FIO</p>
+        <input @bind="@(_patient.FIO)" />
+        
+        <button @onclick=RegistrationOnClick>Регистрация</button>
+    </div>
+</div>
+
+@code {
+    private Patient _patient = new Patient();
+
+    private async void RegistrationOnClick()
+    {
+        
+        Program.DBContext.Patients.Add(_patient);
+        await Program.DBContext.SaveChangesAsync();
+    }
+}
