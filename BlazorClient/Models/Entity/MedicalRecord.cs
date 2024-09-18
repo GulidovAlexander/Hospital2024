@@ -3,7 +3,7 @@
     public class MedicalRecord
     {
         public int MedicalRecordId { get; set; }
-        public DateTime VisiteData { get; set; }
+        public DateTime VisiteDate { get; set; }
         public string Anamnesis { get; set; }
         public string Symptoms { get; set; }
         public string Diagnosis { get; set; }

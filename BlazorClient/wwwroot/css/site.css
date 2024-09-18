@@ -119,3 +119,9 @@ page {
     display: flex !important;
     flex-direction: column !important;
 }
+
+.container-form {
+    padding: 20px;
+    margin: 10px;
+    background-color: gray;
+}

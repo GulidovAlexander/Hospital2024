@@ -1,5 +1,6 @@
 ﻿@page "/patient/{patientId:int}"
 @using BlazorClient.Models.Entity
+@using Microsoft.EntityFrameworkCore
 <h3>PatientPage</h3>
 
 @if (_patient == null)
@@ -10,6 +11,18 @@ else
 {
     <p>Id: @(_patient.PatientId)</p>
     <p>FIO: @(_patient.FIO)</p>
+
+    <a href="@($"/MedicalRecord/0/patient/{patientId}")">Добавить новую мед. карту</a>
+    @foreach (var medicalRecord in _patient.MedicalRecords)
+    {
+        <a href="@($"/MedicalRecord/{medicalRecord.MedicalRecordId}/patient/{patientId}")">
+            <div style="background-color:gray; padding:10px; margin-bottom:20px;">
+                <p>MedicalRecordId: @(medicalRecord.MedicalRecordId)</p>
+                <p>Diagnosis: @(medicalRecord.Diagnosis)</p>
+                <p>TreatmentRecommendations: @(medicalRecord.TreatmentRecommendations)</p>
+            </div>
+        </a>
+    }
 }
 
 @code {
@@ -22,6 +35,9 @@ else
     {
         await base.OnInitializedAsync();
 
-        _patient = Program.DBContext.Patients.FirstOrDefault(x => x.PatientId == patientId);
+        _patient = await Program.DBContext.Patients
+                    .Where(x => x.PatientId == patientId)
+                    .Include(x=>x.MedicalRecords)
+                    .FirstOrDefaultAsync();
     }
 }

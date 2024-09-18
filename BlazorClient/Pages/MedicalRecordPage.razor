@@ -1,0 +1,85 @@
+﻿@page "/MedicalRecord/{medicalRecordId:int}/patient/{patientId:int}"
+@using BlazorClient.Models.Entity
+@using Microsoft.EntityFrameworkCore
+
+@if (medicalRecord != null)
+{
+    <div class="container-form">
+        <p>MedicalRecordId: @(medicalRecord.MedicalRecordId)</p>
+        <div>
+            <p>Дата посещения</p>
+            <input type="datetime" @bind=@(medicalRecord.VisiteDate)/>
+        </div>
+        <div>
+            <p>Диагноз</p>
+            <input @bind=@(medicalRecord.Diagnosis) />
+        </div>
+        <div>
+            <p>Рекомендации врача</p>
+            <input @bind=@(medicalRecord.TreatmentRecommendations) />
+        </div>
+        <div>
+            <p>Анамнез</p>
+            <input @bind=@(medicalRecord.Anamnesis) />
+        </div>
+        <div>
+            <p>Симптомы</p>
+            <input @bind=@(medicalRecord.Symptoms) />
+        </div>
+    </div>
+
+    <div class="container-form">
+        <button @onclick=SaveMedicalRecordAsync>@(medicalRecord.MedicalRecordId == 0 ? "Добавить" : "Сохранить")</button>
+    </div>
+}
+else
+{
+    <p>@($"Не найдено по ID: {medicalRecordId}")</p>
+}
+
+
+@code {
+    [Parameter]
+    public int medicalRecordId { get; set; }
+
+    [Parameter]
+    public int patientId { get; set; }
+
+    private MedicalRecord? medicalRecord = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        if(medicalRecordId == 0)
+        {
+            medicalRecord = new MedicalRecord()
+                {
+                    VisiteDate = DateTime.UtcNow,
+                    PatientId = patientId
+                };
+        }
+        else
+        {
+            medicalRecord = await Program.DBContext.MedicalRecords
+                .Where(x => x.MedicalRecordId == medicalRecordId)
+                .FirstOrDefaultAsync();
+        }
+    }
+
+    private async Task SaveMedicalRecordAsync()
+    {
+        ArgumentNullException.ThrowIfNull(medicalRecord);
+
+        if (medicalRecord.MedicalRecordId == 0)
+        {
+            Program.DBContext.MedicalRecords.Add(medicalRecord);
+        }
+        else
+        {
+            Program.DBContext.MedicalRecords.Update(medicalRecord);
+
+        }
+        await Program.DBContext.SaveChangesAsync();
+    }
+}
