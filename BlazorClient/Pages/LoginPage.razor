@@ -92,7 +92,7 @@
                 Password = RegistrationPassword
             };
 
-        var foundUser = await Program.DBContext.Users.FirstOrDefaultAsync(x => x.Login == LoginUsername);
+        var foundUser = await Program.DBContext.Users.FirstOrDefaultAsync(x => x.Login == RegistrationUsername);
         if (foundUser != null)
         {
             _messageRegistration = "Логин занят!";
