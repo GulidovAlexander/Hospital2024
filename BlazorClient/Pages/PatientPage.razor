@@ -1,0 +1,27 @@
+﻿@page "/patient/{patientId:int}"
+@using BlazorClient.Models.Entity
+<h3>PatientPage</h3>
+
+@if (_patient == null)
+{
+    <p>Пациент не найден!</p>
+}
+else
+{
+    <p>Id: @(_patient.PatientId)</p>
+    <p>FIO: @(_patient.FIO)</p>
+}
+
+@code {
+    [Parameter]
+    public int patientId { get; set; }
+
+    private Patient? _patient = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        _patient = Program.DBContext.Patients.FirstOrDefault(x => x.PatientId == patientId);
+    }
+}

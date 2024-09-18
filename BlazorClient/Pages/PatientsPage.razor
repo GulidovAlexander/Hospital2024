@@ -1,0 +1,30 @@
+﻿@page "/Patients"
+@using BlazorClient.Models.Entity
+@using Microsoft.EntityFrameworkCore
+
+<h3>PatientsPage</h3>
+
+@foreach (var patient in patients)
+{
+    <a href="@($"/Patient/{patient.PatientId}")">
+        <div style="padding: 10px; background-color: grey; margin-bottom: 20px;">
+            <p>Id: @(patient.PatientId)</p>
+            <p>Fio: @(patient.FIO)</p>
+            <p>Place of work: @(patient.PlaceOfWork)</p>
+            <p>Insurency company: @(patient.InsurencyCompany)</p>
+        </div>
+    </a>
+}
+
+
+
+@code {
+    List<Patient> patients = new List<Patient>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        patients = await Program.DBContext.Patients.ToListAsync();
+    }
+}
