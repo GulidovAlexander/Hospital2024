@@ -1,2 +1,3 @@
-(Сделать миграцию, когда добавили что то новое в сущности) dotnet ef migrations add "тут название что вы добавили на англ. слитно"
-(Обновить базу) dotnet ef database update 
+
+dotnet ef migrations add "AddedMedicalRecordAndPrescriptionAndMedicationAndReferral" -v              (Сделать миграцию, когда добавили что то новое в сущности) dotnet ef migrations add "тут название что вы добавили на англ. слитно"
+dotnet ef database update              (Обновить базу) dotnet ef database update 

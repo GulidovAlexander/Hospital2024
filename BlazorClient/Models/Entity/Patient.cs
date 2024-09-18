@@ -11,5 +11,7 @@
         public DateTime InsurencePolicyPeriod { get; set; }
         public string InsurencyCompany { get; set; }
         public byte[] Photo { get; set; }
+
+        public ICollection<MedicalRecord> MedicalRecords { get; set; }
     }
 }
