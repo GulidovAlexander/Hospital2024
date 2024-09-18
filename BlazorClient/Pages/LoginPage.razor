@@ -16,7 +16,7 @@
         </div>
         <button @onclick=LoginOnClick >Войти</button>
 
-        @if (string.IsNullOrEmpty(_messageLogin))
+        @if (!string.IsNullOrEmpty(_messageLogin))
         {
             <p>@(_messageLogin)</p>
         }
@@ -37,7 +37,7 @@
             <input type="password" @bind="@(RegistrationPasswordRepeat)" />
         </div>
         <button @onclick=RegistrationOnClick>Регистрация</button>
-        @if (string.IsNullOrEmpty(_messageRegistration))
+        @if (!string.IsNullOrEmpty(_messageRegistration))
         {
             <p>@(_messageRegistration)</p>
         }
@@ -71,7 +71,7 @@
             return;
         }
         
-        _messageRegistration = "Успешно вошли!";
+        _messageLogin = "Успешно вошли!";
         StateHasChanged();
     }
 
