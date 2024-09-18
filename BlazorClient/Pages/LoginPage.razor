@@ -1,32 +1,54 @@
 ﻿@page "/login"
 @using BlazorClient.Models.Entity
+@using Microsoft.EntityFrameworkCore
+@inject IJSRuntime JSRuntime
 
-<div class="container-login">
-    <p>Авторизация</p>
-    <div>
-        <p>Login</p>
-        <input @bind="@(LoginUsername)" />
-        <p>Password</p>
-        <input type="password" @bind="@(LoginPassword)" />
+<div style="display: flex; gap: 20px;">
+    <div class="container-login">
+        <p>Авторизация</p>
+        <div>
+            <p>Login</p>
+            <input @bind="@(LoginUsername)" />
+        </div>
+        <div>
+            <p>Password</p>
+            <input type="password" @bind="@(LoginPassword)" />
+        </div>
         <button @onclick=LoginOnClick >Войти</button>
-    </div>
-</div>
 
-<div class="container-login">
-    <p>Регистрация</p>
-    <div>
-        <p>Login</p>
-        <input @bind="@(RegistrationUsername)" />
-        <p>Password</p>
-        <input type="password" @bind="@(RegistrationPassword)" />
-        <p>Password (repeat)</p>
-        <input type="password" @bind="@(RegistrationPasswordRepeat)" />
+        @if (string.IsNullOrEmpty(_messageLogin))
+        {
+            <p>@(_messageLogin)</p>
+        }
+    </div>
+
+    <div class="container-login">
+        <p>Регистрация</p>
+        <div>
+            <p>Login</p>
+            <input @bind="@(RegistrationUsername)" />
+        </div>
+        <div>
+            <p>Password</p>
+            <input type="password" @bind="@(RegistrationPassword)" />
+        </div>
+        <div>
+            <p>Password (repeat)</p>
+            <input type="password" @bind="@(RegistrationPasswordRepeat)" />
+        </div>
         <button @onclick=RegistrationOnClick>Регистрация</button>
+        @if (string.IsNullOrEmpty(_messageRegistration))
+        {
+            <p>@(_messageRegistration)</p>
+        }
     </div>
 </div>
 
 @code {
     private ApplicationDBContext _context { get; set; }
+
+    private string _messageLogin = "";
+    private string _messageRegistration = "";
 
     private string LoginUsername { get; set; }
     private string LoginPassword { get; set; }
@@ -35,11 +57,28 @@
     private string RegistrationPassword { get; set; }
     private string RegistrationPasswordRepeat { get; set; }
 
-    private void LoginOnClick()
+    private async void LoginOnClick()
     {
         Console.WriteLine("Login: " + LoginUsername);
         Console.WriteLine("Password: " + LoginPassword);
+
+        var user = await Program.DBContext.Users.FirstOrDefaultAsync(x=>x.Login == LoginUsername && x.Password == LoginPassword);
+
+        if (user == null)
+        {
+            _messageLogin = "Не верный логин или пароль!";
+            StateHasChanged();
+            return;
+        }
+        
+        _messageRegistration = "Успешно вошли!";
+        StateHasChanged();
     }
+
+    // private async Task SetAuthenticationCookie(int userId)
+    // {
+    //     string cookieValue = await JSRuntime.InvokeAsync<string>("cookieFunctions.getCookie", "myCookie");
+    // }
 
     private async void RegistrationOnClick()
     {
@@ -52,7 +91,19 @@
                 Login = RegistrationUsername,
                 Password = RegistrationPassword
             };
+
+        var foundUser = await Program.DBContext.Users.FirstOrDefaultAsync(x => x.Login == LoginUsername);
+        if (foundUser != null)
+        {
+            _messageRegistration = "Логин занят!";
+            StateHasChanged();
+            return;
+        }
+
         Program.DBContext.Users.Add(user);
         await Program.DBContext.SaveChangesAsync();
+
+        _messageRegistration = "Успешно зарегались!";
+        StateHasChanged();
     }
 }
